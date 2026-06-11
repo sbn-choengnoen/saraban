@@ -1,12 +1,12 @@
 <?php
 // includes/config.php — ตั้งค่าการเชื่อมต่อฐานข้อมูล
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');        // ชื่อผู้ใช้ MySQL (XAMPP ค่าเริ่มต้น: root)
-define('DB_PASS', '');            // รหัสผ่าน MySQL (XAMPP ค่าเริ่มต้น: ว่าง)
-define('DB_NAME', 'saraban_db');
+define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
+define('DB_USER', getenv('MYSQLUSER') ?: 'root');
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: 'saraban_db');
 define('SITE_NAME', 'ระบบงานสารบัญอิเล็กทรอนิกส์');
-define('ORG_NAME', 'กองยุทธศาสตร์และงบประมาณ เทศบาลตำบลเชิงเนิน');
+define('ORG_NAME',  'กองยุทธศาสตร์และงบประมาณ เทศบาลตำบลเชิงเนิน');
 
 function getDB() {
     static $conn = null;
