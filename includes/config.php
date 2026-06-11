@@ -1,10 +1,10 @@
 <?php
 // includes/config.php — ตั้งค่าการเชื่อมต่อฐานข้อมูล
 
-define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
-define('DB_USER', getenv('MYSQLUSER') ?: 'root');
-define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
-define('DB_NAME', getenv('MYSQLDATABASE') ?: 'saraban_db');
+define('DB_HOST', $_ENV['MYSQLHOST'] ?? getenv('MYSQLHOST') ?: 'localhost');
+define('DB_USER', $_ENV['MYSQLUSER'] ?? getenv('MYSQLUSER') ?: 'root');
+define('DB_PASS', $_ENV['MYSQLPASSWORD'] ?? getenv('MYSQLPASSWORD') ?: '');
+define('DB_NAME', $_ENV['MYSQLDATABASE'] ?? getenv('MYSQLDATABASE') ?: 'saraban_db');
 define('SITE_NAME', 'ระบบงานสารบัญอิเล็กทรอนิกส์');
 define('ORG_NAME',  'กองยุทธศาสตร์และงบประมาณ เทศบาลตำบลเชิงเนิน');
 
