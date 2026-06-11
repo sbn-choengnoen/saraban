@@ -1,5 +1,5 @@
 {
     "deploy": {
-        "startCommand": "php -S 0.0.0.0:$PORT"
+        "startCommand": "php -s 0.0.0.0${PORT:-80}"
     }
 }
