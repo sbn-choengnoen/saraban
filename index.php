@@ -211,7 +211,7 @@ include 'includes/navbar.php';
               <?php if (!empty($b['attachment'])): ?>
                 <?php $ext = str_contains($b['attachment'], '.pdf') ? 'pdf' : 'img'; ?>
                 <?php if ($ext === 'pdf'): ?>
-                  <a href="<?= sanitize(str_replace('/image/upload/', '/raw/upload/', $b['attachment'])) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
+                  <a href="<?= sanitize(str_replace('/image/upload/', '/image/upload/fl_attachment/', $b['attachment'])) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
                     <i class="bi bi-file-earmark-pdf"></i>
                   </a>
                 <?php else: ?>
