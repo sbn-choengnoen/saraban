@@ -16,7 +16,7 @@ function handleUpload() {
     if (!in_array($ext, $allowed)) return 'ERROR:ชนิดไฟล์ไม่รองรับ (รับเฉพาะ JPG, PNG, GIF, PDF)';
     if ($file['size'] > 10 * 1024 * 1024) return 'ERROR:ไฟล์ต้องไม่เกิน 10 MB';
     $cloud_name    = 'rqkfwcxy';
-    $upload_preset = 'ml_default';
+    $upload_preset = 'saraban_upload';
     $ch = curl_init();
    curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/auto/upload");
     curl_setopt($ch, CURLOPT_POST, true);
