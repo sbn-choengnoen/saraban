@@ -19,7 +19,7 @@ function handleUpload() {
     $api_key    = '247712853572584';
     $api_secret = 'muWvvxNcufvTyaJBoib2q5iqehk';
     $timestamp  = time();
-    $signature  = sha1("folder=saraban&timestamp={$timestamp}{$api_secret}");
+   $signature = sha1("folder=saraban&timestamp=" . $timestamp . $api_secret);
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/auto/upload");
     curl_setopt($ch, CURLOPT_POST, true);
