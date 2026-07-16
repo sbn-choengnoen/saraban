@@ -19,6 +19,32 @@ function handleUpload() {
     if (!is_dir($dir)) mkdir($dir, 0755, true);
     $newName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file['name']);
     if (!move_uploaded_file($file['tmp_name'], $dir . $newName)) return 'ERROR:อัปโหลดไฟล์ไม่สำเร็จ';
+    return $newName;move_uploaded_file($file['tmp_name'], $dir . $newName)) return 'ERROR:อัปโหลดไฟล์ไม่สำเร็จ';
+    return $newName;
+}
+
+// ---------- Cloudinary Upload ----------
+function uploadToCloudinary($file) {
+    $cloud_name = 'rqkfwcxy';
+    $api_key    = '247712853572584';
+    $api_secret = 'muWvvxNcufvTyaJBoib2q5iqehk';
+    $timestamp  = time();
+    $signature  = sha1("folder=saraban&timestamp={$timestamp}{$api_secret}");
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/auto/upload");
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
+        'file'      => new CURLFile($file['tmp_name'], $file['type'], $file['name']),
+        'api_key'   => $api_key,
+        'timestamp' => $timestamp,
+        'signature' => $signature,
+        'folder'    => 'saraban',
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $result = json_decode($response, true);
+    return $result['secure_url'] ?? '';($file['tmp_name'], $dir . $newName)) return 'ERROR:อัปโหลดไฟล์ไม่สำเร็จ';
     return $newName;
 }
 
