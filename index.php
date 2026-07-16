@@ -18,7 +18,7 @@ function handleUpload() {
     $cloud_name    = 'rqkfwcxy';
     $upload_preset = 'saraban_upload';
     $ch = curl_init();
-   curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/raw/upload");
+   curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/auto/upload");
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, [
         'file'          => new CURLFile($file['tmp_name'], $file['type'], $file['name']),
@@ -209,7 +209,7 @@ include 'includes/navbar.php';
             <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
             <td class="text-center">
               <?php if (!empty($b['attachment'])): ?>
-                <?php $ext = strtolower(pathinfo($b['attachment'], PATHINFO_EXTENSION)); ?>
+                <?php $ext = str_contains($b['attachment'], '.pdf') ? 'pdf' : 'img'; ?>
                 <?php if ($ext === 'pdf'): ?>
                   <a href="<?= sanitize($b['attachment']) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
                     <i class="bi bi-file-earmark-pdf"></i>
