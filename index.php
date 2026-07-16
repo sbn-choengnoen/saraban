@@ -29,7 +29,7 @@ function handleUpload() {
     $response = curl_exec($ch);
     curl_close($ch);
     $result = json_decode($response, true);
-    if (!isset($result['secure_url'])) return 'ERROR:อัปโหลดไฟล์ไม่สำเร็จ';
+    if (!isset($result['secure_url'])) return 'ERROR:' . json_encode($result);
     return $result['secure_url'];
 }
 
