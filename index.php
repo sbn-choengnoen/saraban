@@ -219,11 +219,11 @@ include 'includes/navbar.php';
               <?php if (!empty($b['attachment'])): ?>
                 <?php $ext = strtolower(pathinfo($b['attachment'], PATHINFO_EXTENSION)); ?>
                 <?php if ($ext === 'pdf'): ?>
-                  <a href="<?= urldecode( urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
+                  <a href="<?= $b['attachment'] ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
                     <i class="bi bi-file-earmark-pdf"></i>
                   </a>
                 <?php else: ?>
-                  <a href="<?= urldecode( urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-success btn-action" title="ดูรูปภาพ">
+                  <a href="<?= $b['attachment'] ?>" target="_blank" class="btn btn-outline-success btn-action" title="ดูรูปภาพ">
                     <i class="bi bi-image"></i>
                   </a>
                 <?php endif; ?>
