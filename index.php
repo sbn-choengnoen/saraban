@@ -70,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'delete') {
         $id  = (int) $_POST['id'];
         $row = $db->query("SELECT attachment FROM books WHERE id=$id")->fetch_assoc();
-        if (!empty($row['attachment'])) @unlink(__DIR__ . '/uploads/' . $row['attachment']);
+        if (!empty($row['attachment'])) @unlink(__DIR__ . '/' . $row['attachment']);
         $db->query("DELETE FROM books WHERE id=$id");
 
     } elseif ($action === 'delete_file') {
         $id  = (int) $_POST['id'];
         $row = $db->query("SELECT attachment FROM books WHERE id=$id")->fetch_assoc();
-        if (!empty($row['attachment'])) @unlink(__DIR__ . '/uploads/' . $row['attachment']);
+        if (!empty($row['attachment'])) @unlink(__DIR__ . '/' . $row['attachment']);
         $db->query("UPDATE books SET attachment='' WHERE id=$id");
     }
 
@@ -219,11 +219,11 @@ include 'includes/navbar.php';
               <?php if (!empty($b['attachment'])): ?>
                 <?php $ext = strtolower(pathinfo($b['attachment'], PATHINFO_EXTENSION)); ?>
                 <?php if ($ext === 'pdf'): ?>
-                  <a href="uploads/<?= urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
+                  <a href="<?= urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-danger btn-action" title="เปิด PDF">
                     <i class="bi bi-file-earmark-pdf"></i>
                   </a>
                 <?php else: ?>
-                  <a href="uploads/<?= urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-success btn-action" title="ดูรูปภาพ">
+                  <a href="<?= urlencode($b['attachment']) ?>" target="_blank" class="btn btn-outline-success btn-action" title="ดูรูปภาพ">
                     <i class="bi bi-image"></i>
                   </a>
                 <?php endif; ?>
@@ -353,7 +353,7 @@ function openEdit(data) {
   if (data.attachment) {
     const ext = data.attachment.split('.').pop().toLowerCase();
     document.getElementById('currentFileName').textContent = data.attachment;
-    document.getElementById('currentFileLink').href = 'uploads/' + data.attachment;
+    document.getElementById('currentFileLink').href = '' + data.attachment;
     box.classList.remove('d-none');
   } else {
     box.classList.add('d-none');
