@@ -18,7 +18,7 @@ function handleUpload() {
     $cloud_name    = 'rqkfwcxy';
    $upload_preset = 'saraban2';
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/auto/upload");
+   curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloud_name}/image/upload");
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, [
         'file'          => new CURLFile($file['tmp_name'], $file['type'], $file['name']),
