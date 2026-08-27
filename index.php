@@ -6,6 +6,7 @@ requireLogin();
 $db = getDB();
 $pageTitle  = 'ทะเบียนหนังสือรับ — ' . SITE_NAME;
 $activePage = 'books';
+$workTypes  = ['งานประชาสัมพันธ์/บริการ', 'งานแผน', 'งานงบประมาณ', 'งานธุรการ'];
 
 // ---------- อัปโหลดไฟล์ ----------
 function handleUpload() {
@@ -41,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $from_org  = trim($_POST['from_org']  ?? '');
     $to_org    = trim($_POST['to_org']    ?? '');
     $subject   = trim($_POST['subject']   ?? '');
-    $status    = $_POST['status'] ?? 'รับแล้ว';
+        $status    = $_POST['status'] ?? 'รับแล้ว';
+    $work_type = trim($_POST['work_type'] ?? '');
 
     if ($action === 'add') {
         $upload = handleUpload();
@@ -50,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php'); exit;
         }
         $uid  = $_SESSION['user_id'];
-        $stmt = $db->prepare("INSERT INTO books (book_ref,book_date,from_org,to_org,subject,status,attachment,created_by) VALUES (?,?,?,?,?,?,?,?)");
-        $stmt->bind_param('sssssssi', $book_ref, $book_date, $from_org, $to_org, $subject, $status, $upload, $uid);
+                $stmt = $db->prepare("INSERT INTO books (book_ref,book_date,from_org,to_org,subject,work_type,status,attachment,created_by) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('ssssssssi', $book_ref, $book_date, $from_org, $to_org, $subject, $work_type, $status, $upload, $uid);
         $stmt->execute();
 
     } elseif ($action === 'edit') {
@@ -63,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: index.php'); exit;
         }
         $attachment = $upload ?: $oldFile;
-        $stmt = $db->prepare("UPDATE books SET book_ref=?,book_date=?,from_org=?,to_org=?,subject=?,status=?,attachment=? WHERE id=?");
-        $stmt->bind_param('sssssssi', $book_ref, $book_date, $from_org, $to_org, $subject, $status, $attachment, $id);
+                $stmt = $db->prepare("UPDATE books SET book_ref=?,book_date=?,from_org=?,to_org=?,subject=?,work_type=?,status=?,attachment=? WHERE id=?");
+        $stmt->bind_param('ssssssssi', $book_ref, $book_date, $from_org, $to_org, $subject, $work_type, $status, $attachment, $id);
         $stmt->execute();
 
     } elseif ($action === 'delete') {
@@ -85,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // ---------- ดึงข้อมูล ----------
 $search  = trim($_GET['q'] ?? '');
-$fstatus = $_GET['status'] ?? '';
+$fstatus   = $_GET['status'] ?? '';
+$fworktype = $_GET['work_type'] ?? '';
 $where   = '1=1';
 $params  = []; $types = '';
 
@@ -98,6 +101,10 @@ if ($search) {
 if ($fstatus) {
     $where   .= " AND status = ?";
     $params[] = $fstatus; $types .= 's';
+}
+if ($fworktype) {
+    $where   .= " AND work_type = ?";
+    $params[] = $fworktype; $types .= 's';
 }
 
 $stmt = $db->prepare("SELECT b.*, (SELECT COUNT(*) FROM books b2 WHERE b2.id <= b.id) AS reg_number FROM books b WHERE $where ORDER BY b.id ASC");
@@ -158,11 +165,19 @@ include 'includes/navbar.php';
           <input type="text" name="q" class="form-control" placeholder="ค้นหาเลขที่ / เรื่อง / หน่วยงาน..." value="<?= sanitize($search) ?>">
         </div>
       </div>
-      <div class="col-md-3">
+            <div class="col-md-3">
         <select name="status" class="form-select form-select-sm">
           <option value="">สถานะทั้งหมด</option>
           <?php foreach (['รับแล้ว','ดำเนินการ','เสร็จสิ้น'] as $st): ?>
           <option value="<?= $st ?>" <?= $fstatus===$st?'selected':'' ?>><?= $st ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="work_type" class="form-select form-select-sm">
+          <option value="">ประเภทงานทั้งหมด</option>
+          <?php foreach ($workTypes as $wt): ?>
+          <option value="<?= $wt ?>" <?= $fworktype===$wt?'selected':'' ?>><?= $wt ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -194,7 +209,8 @@ include 'includes/navbar.php';
             <th style="width:110px">ลงวันที่</th>
             <th>จาก</th>
             <th>ถึง</th>
-            <th>เรื่อง</th>
+                        <th>เรื่อง</th>
+            <th style="width:130px">ประเภทงาน</th>
             <th style="width:90px">สถานะ</th>
             <th style="width:70px" class="text-center">ไฟล์</th>
             <th style="width:80px"></th>
@@ -213,7 +229,8 @@ include 'includes/navbar.php';
             <td class="small"><?= thaiDate($b['book_date']) ?></td>
             <td class="small"><?= sanitize($b['from_org']) ?></td>
             <td class="small"><?= sanitize($b['to_org'] ?: '-') ?></td>
-            <td class="small"><?= sanitize($b['subject']) ?></td>
+                        <td class="small"><?= sanitize($b['subject']) ?></td>
+            <td class="small"><?= sanitize($b['work_type'] ?: '-') ?></td>
             <td><span class="badge badge-<?= $b['status'] ?>"><?= $b['status'] ?></span></td>
             <td class="text-center">
               <?php if (!empty($b['attachment'])): ?>
@@ -294,6 +311,16 @@ include 'includes/navbar.php';
                 placeholder="เรื่องย่อของหนังสือ" required></textarea>
             </div>
 
+                        <div class="col-md-6">
+              <label class="form-label">ประเภทงาน</label>
+              <select name="work_type" id="fWorkType" class="form-select">
+                <option value="">-- เลือกประเภทงาน --</option>
+                <?php foreach ($workTypes as $wt): ?>
+                <option value="<?= $wt ?>"><?= $wt ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+
             <div class="col-md-6">
               <label class="form-label">สถานะ</label>
               <select name="status" id="fStatus" class="form-select">
@@ -342,7 +369,8 @@ function openEdit(data) {
   document.getElementById('fBookDate').value   = data.book_date || '';
   document.getElementById('fFromOrg').value    = data.from_org;
   document.getElementById('fToOrg').value      = data.to_org || '';
-  document.getElementById('fSubject').value    = data.subject;
+    document.getElementById('fSubject').value    = data.subject;
+  document.getElementById('fWorkType').value   = data.work_type || '';
   document.getElementById('fStatus').value     = data.status;
   document.getElementById('formOldFile').value = data.attachment || '';
   document.getElementById('modalBookTitle').innerHTML =
